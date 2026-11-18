@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do Afiliado | Scorpion Play</title>
+<meta name="theme-color" content="#0B0B0F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens iguais aos do site (Scorpion_Play.html) */
+:root{--bg:#0b0b0f;--surface:#14141c;--line:rgba(139,92,246,.2);--line2:rgba(167,139,250,.5);--text:#f4f2fb;--muted:#a5a1ba;
+--v300:#c4b5fd;--v400:#a78bfa;--v500:#8b5cf6;--v600:#7c3aed;--ok:#34d399;--err:#fb7185;--wait:#fbbf24;--wa:#25d366;
+--grad:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 50%,#a21caf 100%);--glow:0 0 0 1px rgba(167,139,250,.35),0 10px 40px -8px rgba(124,58,237,.65);
+--fd:"Unbounded","Trebuchet MS",system-ui,sans-serif;--fb:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(700px 420px at 88% -6%,rgba(139,92,246,.3),transparent 60%),radial-gradient(560px 420px at -6% 70%,rgba(162,28,175,.16),transparent 60%)}
+h1,h2,h3{font-family:var(--fd);margin:0;line-height:1.2}
+.wrap{max-width:1100px;margin:0 auto;padding:1.2rem 1rem 3rem}
+.glass{background:rgba(255,255,255,.04);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:20px;padding:1.3rem}
+.muted{color:var(--muted)}.small{font-size:.82rem}
+.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-family:var(--fd);font-weight:700}
+.logo-img {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+.logo b{color:var(--v400)}
+.btn{font:600 .95rem var(--fb);color:#fff;border:0;border-radius:12px;padding:.75rem 1.2rem;cursor:pointer;background:var(--grad);box-shadow:var(--glow);text-decoration:none;display:inline-block;text-align:center;transition:transform .15s,filter .2s}
+.btn:hover{filter:brightness(1.12)}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-o{background:transparent;box-shadow:none;border:1px solid var(--line2);color:var(--v300)}
+.btn-o:hover{background:rgba(139,92,246,.15)}
+.btn-wa{background:var(--wa);box-shadow:none;color:#06260f}
+:focus-visible{outline:2px solid var(--v400);outline-offset:2px}
+.field{margin-bottom:.9rem}.field label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:.3rem}
+.inp{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:.75rem .9rem;color:var(--text);font:inherit}
+.inp:focus{outline:0;border-color:var(--v500);box-shadow:0 0 0 3px rgba(139,92,246,.25)}
+.inp[aria-invalid]{border-color:var(--err)}
+.err{color:var(--err);font-size:.8rem;min-height:1.1rem;display:block;margin-top:.2rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+/* acesso */
+.gate{max-width:480px;margin:2rem auto}
+.gate h1{font-size:1.5rem;margin:.4rem 0 .3rem}
+.tabs{display:flex;gap:.3rem;padding:.3rem;border:1px solid var(--line);border-radius:14px;margin:1.1rem 0;overflow-x:auto}
+.tab{flex:1;background:none;border:0;color:var(--muted);font:600 .9rem var(--fb);padding:.6rem 1rem;border-radius:10px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected=true]{color:#fff;background:rgba(139,92,246,.25);box-shadow:inset 0 0 0 1px rgba(139,92,246,.6)}
+/* painel */
+.hello{display:grid;gap:1.2rem;grid-template-columns:1fr}
+.hello h1{font-size:clamp(1.3rem,4vw,1.9rem)}
+.linkbox{display:flex;gap:.5rem}.linkbox .inp{color:var(--v300);min-width:0}
+.copy{min-width:8.5rem}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.kpi{padding:1rem;border-radius:18px;border:1px solid rgba(139,92,246,.45);background:linear-gradient(145deg,rgba(139,92,246,.2),rgba(11,11,15,.6));box-shadow:0 0 24px rgba(139,92,246,.14)}
+.kpi:first-child{grid-column:1/-1}
+.kpi small{color:var(--muted)}.kpi b{display:block;font:700 1.25rem var(--fd);margin-top:.35rem}
+.chart{display:flex;align-items:flex-end;gap:.6rem;height:150px;margin-top:1rem}
+.chart div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:.25rem;font-size:.75rem;color:var(--muted)}
+.chart span{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--v500),rgba(124,58,237,.25));min-height:3px}
+.ptabs{display:flex;gap:.3rem;padding:.3rem;margin:1.1rem 0;overflow-x:auto}
+.panel{display:none}.panel.on{display:block;animation:in .4s ease both}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.grid2{display:grid;gap:1rem}
+ul.list{list-style:none;margin:0;padding:0}
+ul.list li{display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.06);gap:.6rem}
+.badge{font-size:.74rem;font-weight:700;padding:.2rem .65rem;border-radius:999px;border:1px solid;white-space:nowrap}
+.b-ok{color:var(--ok);background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35)}
+.b-w{color:var(--wait);background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.35)}
+.b-no{color:var(--err);background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.35)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:540px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:.8rem;padding:.6rem .6rem .6rem 0;border-bottom:1px solid var(--line)}
+td{padding:.7rem .6rem .7rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.pg{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;gap:.5rem}
+.mats{display:grid;gap:1rem}.mat{display:flex;flex-direction:column;gap:.5rem}.mat p{flex:1;margin:0}
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
+.mcard{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line2);border-radius:20px;padding:1.5rem;animation:pop .25s ease both}
+@keyframes pop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+.mact{display:flex;gap:.7rem;margin-top:1.2rem}.mact .btn{flex:1}
+.toast{position:fixed;left:50%;bottom:1.2rem;z-index:60;background:var(--surface);border:1px solid var(--line2);padding:.75rem 1.2rem;border-radius:14px;font-weight:600;opacity:0;transform:translate(-50%,16px);transition:.3s;pointer-events:none;max-width:92vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:760px){.hello{grid-template-columns:1.1fr 1fr;align-items:center}.kpis{grid-template-columns:repeat(5,1fr)}.kpi:first-child{grid-column:auto}
+.grid2{grid-template-columns:2fr 3fr}.mats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:420px){.row2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+  <link rel="manifest" href="manifest-afiliado.json">
+  <link rel="apple-touch-icon" href="icons/afiliado-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Afiliado">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="logo" href="Scorpion_Play.html">
+    <img src="logo-scorpion-play.png" alt="Scorpion Play " class="logo-img">
+</a>
+    <div style="display:flex;gap:.5rem">
+      <a class="btn btn-o" href="Scorpion_Play.html">Voltar ao site</a>
+      <button class="btn btn-o" id="logout" hidden>Sair</button>
+    </div>
+  </div>
+
+  <!-- ===== CRIAR CONTA / ENTRAR ===== -->
+  <main id="gate" class="gate glass">
+    <h1 id="gTitle">Seja afiliado</h1>
+    <p class="muted" id="gSub">Crie sua conta, receba seu link exclusivo e ganhe comissão por cada venda.</p>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-g="reg">Criar conta</button>
+      <button class="tab" role="tab" aria-selected="false" data-g="log">Entrar</button>
+    </div>
+    <form id="regForm" novalidate>
+      <div class="field"><label for="rName">Nome completo</label><input class="inp" id="rName" autocomplete="name"><small class="err" id="rNameE"></small></div>
+      <div class="row2">
+        <div class="field"><label for="rEmail">E-mail</label><input class="inp" id="rEmail" type="email" autocomplete="email"><small class="err" id="rEmailE"></small></div>
+        <div class="field"><label for="rPhone">WhatsApp</label><input class="inp" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000"><small class="err" id="rPhoneE"></small></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="rPix">Chave Pix</label><input class="inp" id="rPix" placeholder="CPF, e-mail, telefone ou aleatória" autocomplete="off"><small class="err" id="rPixE"></small></div>
+        <div class="field"><label for="rCode">Código do seu link</label><input class="inp" id="rCode" maxlength="32" autocomplete="off"><small class="err" id="rCodeE"></small></div>
+      </div>
+      <p class="small muted" id="rPrev" style="margin:-.3rem 0 .9rem"></p>
+      <div class="row2">
+        <div class="field"><label for="rPass">Senha</label><input class="inp" id="rPass" type="password" autocomplete="new-password"><small class="err" id="rPassE"></small></div>
+        <div class="field"><label for="rPass2">Repetir senha</label><input class="inp" id="rPass2" type="password" autocomplete="new-password"><small class="err" id="rPass2E"></small></div>
+      </div>
+      <small class="err" id="rErr" role="alert"></small>
+      <button class="btn" style="width:100%" id="rBtn">Criar conta de afiliado</button>
+    </form>
+    <form id="logForm" novalidate hidden>
+      <div class="field"><label for="lEmail">E-mail</label><input class="inp" id="lEmail" type="email" autocomplete="email"><small class="err" id="lEmailE"></small></div>
+      <div class="field"><label for="lPass">Senha</label><input class="inp" id="lPass" type="password" autocomplete="current-password"><small class="err" id="lPassE"></small></div>
+      <small class="err" id="lErr" role="alert"></small>
+      <button class="btn" style="width:100%" id="lBtn">Entrar</button>
+      <p class="small muted" style="margin-bottom:0">Já foi cadastrado pelo administrador? Use a aba <b>Criar conta</b> com o mesmo e-mail para ativar seu acesso.</p>
+    </form>
+  </main>
+
+  <!-- ===== PAINEL ===== -->
+  <div id="app" hidden>
+    <header class="glass hello">
+      <div>
+        <h1>Olá, <span id="aName"></span>! Pronto para alavancar suas vendas hoje?</h1>
+        <p class="muted small" style="margin:.6rem 0 0">Comissão atual: <b id="aRate" style="color:var(--v300)"></b> por venda confirmada.</p>
+      </div>
+      <div>
+        <label class="small muted" for="aLink">Seu link exclusivo</label>
+        <div class="linkbox" style="margin-top:.3rem"><input class="inp" id="aLink" readonly><button class="btn copy" id="copy">Copiar Link</button></div>
+      </div>
+    </header>
+
+    <nav class="glass ptabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-p="dash">Dashboard</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="saq">Saques</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="ext">Extrato</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="mat">Materiais</button>
+    </nav>
+
+    <section class="panel on" id="p-dash">
+      <div class="kpis" id="kpis"></div>
+      <div class="glass" style="margin-top:1rem">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem"><h2 style="font-size:1rem">Vendas nos últimos 7 dias</h2><span class="small muted">Atualiza sozinho quando o administrador confirma uma venda</span></div>
+        <div class="chart" id="chart"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-saq"><div class="grid2">
+      <div class="glass">
+        <h2 style="font-size:1.05rem;margin-bottom:1rem">Solicitar saque via Pix</h2>
+        <p class="small muted" style="margin:0">Chave Pix cadastrada</p>
+        <div style="display:flex;gap:.5rem;margin:.3rem 0 1rem"><div class="inp" id="pixShow" style="flex:1;overflow-wrap:anywhere"></div><button class="btn btn-o" id="pixEdit">Alterar</button></div>
+        <p class="small muted" style="margin:0 0 .8rem">Disponível para saque: <b id="avail" style="color:var(--v300)"></b></p>
+        <div class="field"><label for="wVal">Valor do saque (mínimo R$ 20,00)</label><input class="inp" id="wVal" inputmode="decimal" placeholder="0,00"><small class="err" id="wErr"></small></div>
+        <button class="btn" style="width:100%" id="wBtn">Solicitar Saque Pix</button>
+      </div>
+      <div class="glass"><h2 style="font-size:1.05rem;margin-bottom:.6rem">Últimas solicitações</h2><ul class="list" id="wHist"></ul></div>
+    </div></section>
+
+    <section class="panel" id="p-ext"><div class="glass">
+      <div style="display:flex;flex-wrap:wrap;gap:.7rem;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 style="font-size:1.05rem">Vendas indicadas</h2>
+        <input class="inp" id="q" type="search" placeholder="Buscar por plano, status ou data" aria-label="Buscar vendas" style="max-width:300px">
+      </div>
+      <div class="tw"><table><thead><tr><th>Data/Hora</th><th>Plano</th><th>Valor da venda</th><th>Sua comissão</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="pg"><span class="small muted" id="pgInfo"></span><div style="display:flex;gap:.5rem"><button class="btn btn-o" id="prev">Anterior</button><button class="btn btn-o" id="next">Próxima</button></div></div>
+    </div></section>
+
+    <section class="panel" id="p-mat">
+      <div class="mats" id="mats"></div>
+      <div class="glass" style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center">
+        <div><h2 style="font-size:1rem">Dúvidas sobre comissões ou saques?</h2><p class="muted small" style="margin:.3rem 0 0">Fale direto com o suporte master dos afiliados.</p></div>
+        <a class="btn btn-wa" id="wa" target="_blank" rel="noopener noreferrer">Falar com o suporte no WhatsApp</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden><div class="mcard" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <h3 id="mTitle" style="font-size:1.05rem;margin-bottom:.7rem"></h3><div id="mBody"></div>
+  <div class="mact"><button class="btn btn-o" id="mNo">Cancelar</button><button class="btn" id="mOk">Confirmar</button></div>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.1/dist/umd/supabase.js"></script>
+<script>/* =====================================================
+   Painel do afiliado — integrado ao Supabase
+   Login/cadastro: Supabase Auth · dados: tabelas affiliates, sales, profiles, settings
+   Regras de segurança (RLS) e funções: supabase-setup.sql + supabase-afiliados.sql
+   ===================================================== */
+(function () {
+  'use strict';
+  var SB_URL = 'https://plgbxadtnfomfywkanwp.supabase.co';
+  var SB_KEY = 'sb_publishable_HtzmcPgLn96bJa6ZqKoWAg_cFPtjc_K';   // chave pública: a segurança vem do RLS
+  var SUPPORT = '5538991320815';       // WhatsApp do suporte master
+  var SITE_PAGE = 'Scorpion_Play.html';  // página inicial do site (ou defina "Endereço do site" no admin)
+  var MIN_WITHDRAW = 20;
+  var PLAN = { mensal: 'Mensal', trimestral: 'Trimestral', anual: 'Anual' };
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var brl = function (v) { return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); };
+  var esc = function (v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var fmtDT = function (d) { d = new Date(d); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
+  var tt;
+  function toast(m) { var t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove('show'); }, 3200); }
+
+  var sb = null;
+  try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'sb-scorpion-aff' } }); } catch (e) { sb = null; }
+
+  /* ---------- estado (vem do banco) ---------- */
+  var aff = null, stmt = { sales: [], pending: [] }, settings = {};
+  function rateOf() {
+    if (aff.commission != null && aff.commission !== '') return Number(aff.commission);
+    return settings.commission != null && settings.commission !== '' ? Number(settings.commission) : 20;
+  }
+  function minWithdraw() { return Number(settings.minWithdraw) > 0 ? Number(settings.minWithdraw) : MIN_WITHDRAW; }
+  function linkOf(code) {
+    if (settings.siteUrl) return String(settings.siteUrl).replace(/\/+$/, '') + '/?ref=' + encodeURIComponent(code);
+    var base; try { base = new URL(SITE_PAGE, location.href).href; } catch (e) { base = SITE_PAGE; }
+    return base + '?ref=' + encodeURIComponent(code);
+  }
+  function statement() {
+    var rate = rateOf(), prices = settings.prices || {};
+    var rows = (stmt.sales || []).map(function (s) {
+      return { date: s.date, plan: PLAN[s.plan] || s.plan || '—', amount: Number(s.amount) || 0, com: (Number(s.amount) || 0) * rate / 100, status: 'Confirmada' };
+    });
+    (stmt.pending || []).forEach(function (u) {
+      var amt = Number(prices[u.plan]) || 0;
+      rows.push({ date: u.date, plan: PLAN[u.plan] || '—', amount: amt, com: amt * rate / 100, status: 'Em Análise' });
+    });
+    return rows.sort(function (x, y) { return new Date(y.date) - new Date(x.date); });
+  }
+  function pendingWd() { return (aff.withdrawals || []).filter(function (w) { return w.status === 'pendente'; }).reduce(function (t, w) { return t + Number(w.amount); }, 0); }
+  function available() { return Math.max(0, Math.round((Number(aff.balance || 0) - pendingWd()) * 100) / 100); }
+
+  async function loadAll() {
+    var s = await sb.auth.getSession();
+    var user = s.data && s.data.session && s.data.session.user;
+    if (!user) return false;
+    var r = await sb.from('affiliates').select('*').eq('user_id', user.id).maybeSingle();
+    if (r.error) throw r.error;
+    if (!r.data) return null;                       // conta existe, mas não é de afiliado
+    var other = await Promise.all([sb.rpc('affiliate_statement'), sb.from('settings').select('data').eq('id', 1).maybeSingle()]);
+    aff = r.data;
+    stmt = (other[0] && other[0].data) || { sales: [], pending: [] };
+    settings = (other[1] && other[1].data && other[1].data.data) || {};
+    return true;
+  }
+
+  /* ---------- validação ---------- */
+  var V = {
+    name: function (v) { v = v.trim(); return v.length < 3 || v.split(/\s+/).length < 2 ? 'Informe nome e sobrenome.' : ''; },
+    email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Informe um e-mail válido.'; },
+    phone: function (v) { var d = v.replace(/\D/g, ''); return d.length < 10 || d.length > 11 ? 'Informe DDD e número.' : ''; },
+    pix: function (v) { return v.trim().length < 5 ? 'Informe sua chave Pix para receber as comissões.' : ''; },
+    code: function (v) { return /^[A-Za-z0-9_-]{3,26}$/.test(v.trim()) ? '' : 'Use de 3 a 26 letras, números, hífen ou sublinhado.'; },
+    pass: function (v) { return v.length < 8 ? 'A senha precisa ter pelo menos 8 caracteres.' : (!/[A-Za-z]/.test(v) || !/\d/.test(v)) ? 'Use letras e números.' : ''; }
+  };
+  function fieldErr(input, msg) {
+    var e = $('#' + input.id + 'E'); if (e) e.textContent = msg || '';
+    if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+    return !msg;
+  }
+  function maskPhone(v) {
+    var d = v.replace(/\D/g, '').slice(0, 11);
+    if (!d) return ''; if (d.length <= 2) return '(' + d;
+    if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  }
+  function slug(n) { return String(n).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, '').slice(0, 12); }
+  function authMsg(err) {
+    var m = String((err && err.message) || '').toLowerCase();
+    if (m.indexOf('already registered') > -1 || m.indexOf('already been registered') > -1) return 'Este e-mail já tem conta. Use a aba Entrar.';
+    if (m.indexOf('invalid login') > -1) return 'E-mail ou senha incorretos.';
+    if (m.indexOf('not confirmed') > -1) return 'Confirme seu e-mail pelo link que enviamos antes de entrar.';
+    if (m.indexOf('rate limit') > -1 || m.indexOf('too many') > -1) return 'Muitas tentativas. Aguarde um pouco e tente de novo.';
+    if (m.indexOf('password') > -1) return 'A senha não foi aceita. Use pelo menos 8 caracteres, com letras e números.';
+    return 'Não foi possível concluir agora. Tente novamente em instantes.';
+  }
+
+  /* ---------- acesso ---------- */
+  function setGate(mode) {
+    $$('[data-g]').forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.g === mode)); });
+    $('#regForm').hidden = mode !== 'reg'; $('#logForm').hidden = mode !== 'log';
+    $('#gTitle').textContent = mode === 'reg' ? 'Seja afiliado' : 'Entrar no painel';
+    $('#gSub').textContent = mode === 'reg' ? 'Crie sua conta, receba seu link exclusivo e ganhe comissão por cada venda.' : 'Acompanhe suas vendas e comissões.';
+  }
+  $$('[data-g]').forEach(function (b) { b.addEventListener('click', function () { setGate(b.dataset.g); }); });
+
+  var rName = $('#rName'), rEmail = $('#rEmail'), rPhone = $('#rPhone'), rPix = $('#rPix'), rCode = $('#rCode'), rPass = $('#rPass'), rPass2 = $('#rPass2');
+  var codeTouched = false;
+  function prevLink() { $('#rPrev').textContent = rCode.value ? 'Seu link: ' + linkOf(rCode.value).replace(/^https?:\/\//, '') : ''; }
+  rName.addEventListener('input', function () { if (!codeTouched) { rCode.value = slug(rName.value); prevLink(); } });
+  rCode.addEventListener('input', function () { codeTouched = true; prevLink(); });
+  rPhone.addEventListener('input', function () { rPhone.value = maskPhone(rPhone.value); });
+  $$('.inp').forEach(function (i) { i.addEventListener('input', function () { if (i.hasAttribute('aria-invalid')) fieldErr(i, ''); }); });
+
+  $('#regForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); $('#rErr').textContent = '';
+    if (!sb) { $('#rErr').textContent = 'Sem conexão com o servidor. Recarregue a página.'; return; }
+    var checks = [[rName, V.name(rName.value)], [rEmail, V.email(rEmail.value)], [rPhone, V.phone(rPhone.value)], [rPix, V.pix(rPix.value)],
+      [rCode, V.code(rCode.value)], [rPass, V.pass(rPass.value)], [rPass2, rPass2.value === rPass.value && rPass.value ? '' : 'As senhas não conferem.']];
+    var first = null;
+    checks.forEach(function (c) { if (!fieldErr(c[0], c[1]) && !first) first = c[0]; });
+    if (first) return first.focus();
+
+    var btn = $('#rBtn'); btn.disabled = true; btn.textContent = 'Criando conta...';
+    try {
+      var av = await sb.rpc('affiliate_code_available', { p_code: rCode.value.trim() });
+      if (!av.error && av.data === false) { fieldErr(rCode, 'Este código já está em uso. Escolha outro.'); rCode.focus(); return; }
+      var r = await sb.auth.signUp({ email: rEmail.value.trim().toLowerCase(), password: rPass.value,
+        options: { data: { role: 'affiliate', name: rName.value.trim(), phone: rPhone.value, pix: rPix.value.trim(), code: rCode.value.trim() } } });
+      if (r.error) throw new Error(authMsg(r.error));
+      if (r.data.user && r.data.user.identities && r.data.user.identities.length === 0) throw new Error('Este e-mail já tem conta. Use a aba Entrar.');
+      if (!r.data.session) throw new Error('Conta criada! Enviamos um link de confirmação para o seu e-mail. Confirme e depois entre.');
+      $('#regForm').reset(); codeTouched = false;
+      await enter();
+    } catch (err) { $('#rErr').textContent = err.message || 'Não foi possível criar a conta.'; }
+    finally { btn.disabled = false; btn.textContent = 'Criar conta de afiliado'; }
+  });
+
+  $('#logForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); $('#lErr').textContent = '';
+    var le = $('#lEmail'), lp = $('#lPass');
+    var ok1 = fieldErr(le, V.email(le.value)), ok2 = fieldErr(lp, lp.value ? '' : 'Preencha a senha.');
+    if (!ok1 || !ok2) return;
+    if (!sb) { $('#lErr').textContent = 'Sem conexão com o servidor. Recarregue a página.'; return; }
+    var btn = $('#lBtn'); btn.disabled = true;
+    try {
+      var r = await sb.auth.signInWithPassword({ email: le.value.trim().toLowerCase(), password: lp.value });
+      if (r.error) throw new Error(authMsg(r.error));
+      $('#logForm').reset();
+      await enter();
+    } catch (err) { $('#lErr').textContent = err.message; }
+    finally { btn.disabled = false; }
+  });
+  $('#logout').addEventListener('click', async function () { if (sb) await sb.auth.signOut(); aff = null; leave(); toast('Você saiu da sua conta.'); });
+
+  async function enter() {
+    var ok;
+    try { ok = await loadAll(); } catch (err) { console.error(err); ok = false; $('#lErr').textContent = 'Não foi possível carregar seus dados: ' + (err.message || ''); }
+    if (ok === null) {                               // login de cliente, não de afiliado
+      await sb.auth.signOut(); leave();
+      $('#lErr').textContent = 'Esta conta é de cliente do site, não de afiliado. Para ser afiliado, crie uma conta com outro e-mail.';
+      return;
+    }
+    if (!ok) { leave(); return; }
+    $('#gate').hidden = true; $('#app').hidden = false; $('#logout').hidden = false; renderAll();
+  }
+  function leave() { $('#gate').hidden = false; $('#app').hidden = true; $('#logout').hidden = true; setGate('log'); }
+
+  /* ---------- abas e cópia ---------- */
+  $$('[data-p]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('[data-p]').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+      $$('.panel').forEach(function (p) { p.classList.toggle('on', p.id === 'p-' + b.dataset.p); });
+    });
+  });
+  function copyText(text, done) {
+    function fb() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); done();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fb); else fb();
+  }
+  $('#copy').addEventListener('click', function () {
+    var b = this; copyText($('#aLink').value, function () { b.textContent = 'Copiado!'; setTimeout(function () { b.textContent = 'Copiar Link'; }, 1800); });
+  });
+
+  /* ---------- modal ---------- */
+  var onOk = null, opener = null;
+  function dialog(title, html, okLabel, fn) {
+    opener = document.activeElement; $('#mTitle').textContent = title; $('#mBody').innerHTML = html; $('#mOk').textContent = okLabel; onOk = fn;
+    $('#modal').hidden = false; var f = $('#mBody input'); (f || $('#mOk')).focus();
+  }
+  function closeDialog() { $('#modal').hidden = true; onOk = null; if (opener && opener.focus) opener.focus(); }
+  $('#mNo').addEventListener('click', closeDialog);
+  $('#modal').addEventListener('click', function (e) { if (e.target.id === 'modal') closeDialog(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#modal').hidden) closeDialog(); });
+  $('#mOk').addEventListener('click', async function () { if (onOk && (await onOk()) !== false) closeDialog(); });
+
+  /* ---------- render ---------- */
+  var page = 1, PER = 6, WD = { pendente: ['Pendente', 'b-w'], aprovado: ['Aprovado', 'b-ok'], recusado: ['Recusado', 'b-no'] };
+  function renderAll() {
+    if (!aff) return;
+    var st = statement(), conf = st.filter(function (x) { return x.status === 'Confirmada'; });
+    var pend = st.filter(function (x) { return x.status === 'Em Análise'; }).reduce(function (t, x) { return t + x.com; }, 0);
+    var clicks = aff.clicks || 0, sales = aff.sales != null ? aff.sales : conf.length, conv = clicks ? sales / clicks * 100 : 0;
+
+    $('#aName').textContent = aff.name.split(' ')[0];
+    $('#aRate').textContent = String(rateOf()).replace('.', ',') + '%';
+    $('#aLink').value = linkOf(aff.code);
+    $('#kpis').innerHTML = [['Saldo disponível', brl(available())], ['Comissão pendente', brl(pend)], ['Total de vendas', sales],
+      ['Total de cliques', clicks.toLocaleString('pt-BR')], ['Taxa de conversão', conv.toFixed(1).replace('.', ',') + '%']]
+      .map(function (k) { return '<div class="kpi"><small>' + k[0] + '</small><b>' + k[1] + '</b></div>'; }).join('');
+
+    var days = [], cnt = [], names = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'], i;
+    for (i = 6; i >= 0; i--) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i); days.push(d); cnt.push(0); }
+    conf.forEach(function (s) { var t = new Date(s.date); t.setHours(0, 0, 0, 0); days.forEach(function (d, j) { if (d.getTime() === t.getTime()) cnt[j]++; }); });
+    var mx = Math.max.apply(null, cnt.concat(1));
+    $('#chart').innerHTML = cnt.map(function (c, j) { return '<div><b>' + c + '</b><span style="height:' + (c / mx * 100) + '%"></span>' + names[days[j].getDay()] + '</div>'; }).join('');
+
+    $('#pixShow').textContent = aff.pix || 'Nenhuma chave cadastrada';
+    $('#avail').textContent = brl(available());
+    var wl = (aff.withdrawals || []).slice(0, 6);
+    $('#wHist').innerHTML = wl.length ? wl.map(function (w) {
+      var s = WD[w.status] || WD.pendente;
+      return '<li><div><b>' + brl(Number(w.amount)) + '</b><div class="small muted">' + fmtDT(w.date) + '</div></div><span class="badge ' + s[1] + '">' + s[0] + '</span></li>';
+    }).join('') : '<li class="muted small">Você ainda não fez nenhuma solicitação.</li>';
+
+    var q = $('#q').value.trim().toLowerCase();
+    var list = st.filter(function (x) { return (fmtDT(x.date) + ' ' + x.plan + ' ' + x.status).toLowerCase().indexOf(q) > -1; });
+    var pages = Math.max(1, Math.ceil(list.length / PER)); page = Math.min(page, pages);
+    $('#rows').innerHTML = list.slice((page - 1) * PER, page * PER).map(function (x) {
+      return '<tr><td>' + fmtDT(x.date) + '</td><td>' + esc(x.plan) + '</td><td>' + (x.amount ? brl(x.amount) : '—') + '</td><td style="color:var(--v300);font-weight:700">' + (x.amount ? brl(x.com) : '—') +
+        '</td><td><span class="badge ' + (x.status === 'Confirmada' ? 'b-ok' : 'b-w') + '">' + x.status + '</span></td></tr>';
+    }).join('') || '<tr><td colspan="5" class="muted" style="text-align:center;padding:2rem 0">' + (q ? 'Nenhuma venda encontrada.' : 'Nenhuma venda ainda. Divulgue seu link para começar.') + '</td></tr>';
+    $('#pgInfo').textContent = 'Página ' + page + ' de ' + pages + ' · ' + list.length + ' registros';
+    $('#prev').disabled = page <= 1; $('#next').disabled = page >= pages;
+
+    $('#wa').href = 'https://wa.me/' + SUPPORT + '?text=' + encodeURIComponent('Ola, sou afiliado (' + aff.name + ', codigo ' + aff.code + ') e preciso de ajuda');
+    renderMats();
+  }
+  $('#q').addEventListener('input', function () { page = 1; renderAll(); });
+  $('#prev').addEventListener('click', function () { page--; renderAll(); });
+  $('#next').addEventListener('click', function () { page++; renderAll(); });
+
+  /* ---------- materiais ---------- */
+  var DOWNLOADS = [
+    { t: 'Banners para Instagram', d: 'Feed 1080x1080 e Stories 1080x1920.', u: 'assets/afiliados/banners-instagram.zip' },
+    { t: 'Artes para Status do WhatsApp', d: 'Artes prontas em alta resolução.', u: 'assets/afiliados/status-whatsapp.zip' },
+    { t: 'Logo e identidade visual', d: 'PNG e SVG com fundo transparente.', u: 'assets/afiliados/logo.zip' }
+  ];
+  var SCRIPTS = [
+    { t: 'Script de vendas: WhatsApp', x: 'Oi! Você já conhece o Scorpion Play IPTV? Canais, filmes e séries em 4K e Full HD na TV, no celular e no computador. Dá uma olhada nos planos e ative em minutos: {link}' },
+    { t: 'Legenda para Instagram', x: 'Canais, filmes e séries em 4K em um só lugar. Veja os planos e comece hoje pelo link da bio: {link}' }
+  ];
+  function renderMats() {
+    var link = linkOf(aff.code);
+    $('#mats').innerHTML = DOWNLOADS.map(function (m) {
+      return '<div class="glass mat"><h3 style="font-size:.95rem">' + m.t + '</h3><p class="muted small">' + m.d + '</p><a class="btn btn-o" href="' + m.u + '" download>Baixar</a></div>';
+    }).join('') + SCRIPTS.map(function (s, i) {
+      return '<div class="glass mat"><h3 style="font-size:.95rem">' + s.t + '</h3><p class="muted small">' + esc(s.x.replace('{link}', link)) + '</p><button class="btn btn-o" data-script="' + i + '">Copiar texto</button></div>';
+    }).join('');
+  }
+  $('#mats').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-script]'); if (!b || !aff) return;
+    copyText(SCRIPTS[b.dataset.script].x.replace('{link}', linkOf(aff.code)), function () { toast('Texto copiado com o seu link.'); });
+  });
+
+  /* ---------- saques ---------- */
+  async function reload() { try { await loadAll(); renderAll(); } catch (e) { console.error(e); } }
+  $('#pixEdit').addEventListener('click', function () {
+    dialog('Alterar chave Pix', '<div class="field"><label for="nPix">Nova chave Pix</label><input class="inp" id="nPix" value="' + esc(aff.pix || '') + '" autocomplete="off"><small class="err" id="nPixE"></small></div>', 'Salvar', async function () {
+      var i = $('#nPix'); if (!fieldErr(i, V.pix(i.value))) return false;
+      var r = await sb.rpc('affiliate_update_pix', { p_pix: i.value.trim() });
+      if (r.error) { fieldErr(i, r.error.message); return false; }
+      await reload(); toast('Chave Pix atualizada.');
+    });
+  });
+  $('#wBtn').addEventListener('click', function () {
+    var err = $('#wErr'), v = parseFloat($('#wVal').value.replace(/\./g, '').replace(',', '.'));
+    err.textContent = '';
+    if (!aff.pix) return (err.textContent = 'Cadastre sua chave Pix antes de sacar.');
+    if (!(v > 0)) return (err.textContent = 'Digite o valor que deseja sacar.');
+    if (v < minWithdraw()) return (err.textContent = 'O valor mínimo para saque é ' + brl(minWithdraw()) + '.');
+    if (v > available()) return (err.textContent = 'Valor maior que o saldo disponível.');
+    v = Math.round(v * 100) / 100;
+    dialog('Confirmar saque', '<p class="muted" style="margin:0">Você vai solicitar <b style="color:var(--v300)">' + brl(v) + '</b> para a chave Pix:</p><div class="inp" style="margin-top:.6rem;overflow-wrap:anywhere">' + esc(aff.pix) + '</div><p class="small muted" style="margin-bottom:0">O administrador analisa e paga por Pix. Acompanhe o status no histórico.</p>', 'Confirmar saque', async function () {
+      var r = await sb.rpc('request_withdrawal', { p_amount: v });
+      if (r.error) { closeDialog(); err.textContent = r.error.message; await reload(); return false; }
+      $('#wVal').value = ''; await reload(); toast('Saque solicitado! Aguarde a aprovação.');
+    });
+  });
+
+  /* ---------- atualização automática ---------- */
+  setInterval(function () { if (!$('#app').hidden && document.visibilityState === 'visible') reload(); }, 30000);
+  window.addEventListener('focus', function () { if (!$('#app').hidden) reload(); });
+
+  (async function boot() {
+    if (!sb) { setGate('reg'); $('#rErr').textContent = 'Não foi possível carregar o Supabase. Verifique a internet e recarregue a página.'; return; }
+    setGate(new URLSearchParams(location.search).get('entrar') ? 'log' : 'reg');
+    try { var s = await sb.auth.getSession(); if (s.data && s.data.session) await enter(); } catch (e) { console.error(e); }
+  })();
+})();
+</script>
+<script>if("serviceWorker"in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("sw.js")});</script>
+</body>
+</html>
